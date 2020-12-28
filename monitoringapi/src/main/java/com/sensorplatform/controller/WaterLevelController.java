@@ -1,8 +1,7 @@
 package com.sensorplatform.controller;
 
-import com.sensorplatform.model.WaterLevel;
+import com.sensorplatform.entity.request.WaterLevelRequest;
 import com.sensorplatform.service.WaterLevelService;
-import com.sensorplatform.utility.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +18,15 @@ public class WaterLevelController {
     @Autowired
     WaterLevelService waterLevelService;
 
-    @RequestMapping(path = "/waterlevel", method = RequestMethod.GET)
-    public ResponseEntity<String> getWaterLevel(@RequestParam("waterLevel") String waterLevel) {
-
-        logger.info("invoking getWaterLevel() GET endpoint...");
-        logger.debug("received data:: " + waterLevel);
-
-        return new ResponseEntity<>(waterLevel, HttpStatus.OK);
-    }
-
     @RequestMapping(path = "/waterlevel", method = RequestMethod.POST)
-    public ResponseEntity<WaterLevel> persistWaterLevel(@RequestBody WaterLevel waterLevel) {
+    public ResponseEntity<HttpStatus> persistWaterLevel(@RequestBody WaterLevelRequest waterLevelRequest) {
 
         logger.info("invoking persistWaterLevel() POST endpoint...");
-        logger.debug("received sensor data :: " + waterLevel.toString());
+        logger.debug("received sensor data :: " + waterLevelRequest.toString());
 
-        waterLevelService.persistWaterLevelSensorData(waterLevel);
+        waterLevelService.persistWaterLevelSensorData(waterLevelRequest);
 
-        return new ResponseEntity<>(waterLevel, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

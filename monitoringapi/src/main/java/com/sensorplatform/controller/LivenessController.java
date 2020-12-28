@@ -1,6 +1,6 @@
 package com.sensorplatform.controller;
 
-import com.sensorplatform.utility.Constants;
+import com.sensorplatform.constant.ApplicationConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,6 @@ public class LivenessController {
 
         logger.info("liveness endpoint is consumable...");
 
-        return new ResponseEntity<>(Constants.LIVENESS_RESPONSE, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(ApplicationConstants.LIVENESS_RESPONSE, HttpStatus.ACCEPTED);
     }
 }
