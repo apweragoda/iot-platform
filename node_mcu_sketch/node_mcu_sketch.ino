@@ -3,10 +3,20 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 
-const char* ssid = "**********";
-const char* password = "**********";
+#include <ArduinoJson.h>
 
-char* server = "http://**********/sensordata/waterlevel";
+//network connection details
+const char* ssid = "*****";
+const char* password = "*****";
+
+//seerver & REST endpoint details
+const String host = "*****";
+const String resourcePathWaterLevel = "/sensordata/waterlevel";
+const String resourcePathFlowRate = "/sensordata/flowRate";
+
+//json related properties
+const size_t CAPACITY = JSON_OBJECT_SIZE(10);
+StaticJsonDocument<CAPACITY> document;
 
 void setup() {
 
@@ -61,7 +71,7 @@ void retrieveSensorDataArduino() {
     if(validateWiFiStatus()) {
 
       //send data to server
-      invokePostEndpoint(server, stream);
+      invokePostEndpoint(prepareEndpoint(stream), stream);
     }
     else {
 
@@ -84,11 +94,13 @@ boolean validateWiFiStatus() {
 }
 
 //consume a POST endpoint
-void invokePostEndpoint(char* server, String data) {
+void invokePostEndpoint(String endpoint, String data) {
+
+  Serial.println("invoking invokePostEndpoint(String endpoint, String data)...");
 
   HTTPClient http;
 
-  http.begin(server);
+  http.begin(endpoint);
 
   //appending headers
   http.addHeader("Content-Type", "application/json");
@@ -100,4 +112,33 @@ void invokePostEndpoint(char* server, String data) {
   Serial.println(httpResponseCode);
 
   http.end();
+
+  Serial.println("completed invoking invokePostEndpoint(String endpoint, String data)...");
+}
+
+//prepare & assemble POST enpoint
+String prepareEndpoint(String stream) {
+
+  Serial.println("invoking prepareEndpoint(String stream)...");
+
+  String endpoint;
+
+  deserializeJson(document, stream);
+
+  if(document["dataType"] == "water_level") {
+
+    endpoint = host + resourcePathWaterLevel;
+
+    Serial.println("assembled endpoint::" + endpoint);
+
+    return endpoint;
+
+  }
+
+  endpoint = host + resourcePathFlowRate;
+
+  Serial.println("assembled endpoint::" + endpoint);
+  Serial.println("completed invoking prepareEndpoint(String stream)...");
+
+  return endpoint;
 }

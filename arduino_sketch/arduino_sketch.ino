@@ -5,11 +5,19 @@
 
 LiquidCrystal lcd(50, 51, 10, 11, 12, 13);
 
-const size_t CAPACITY = JSON_OBJECT_SIZE(5);
+const size_t CAPACITY = JSON_OBJECT_SIZE(10);
 
 StaticJsonDocument<CAPACITY> document;
 
-const String deviceId = "CL_CV_001";
+//ultrasonic sensor
+const String utrDataType = "water_level";
+const String utrSensorId = "SNSR_009";
+//flow rate sensor
+const String frtDataType = "flow_rate";
+const String frtSensorId = "SNSR_003";
+
+//struct for holding tramnsmission data
+struct TransmissionData {double sensorReading; bool alarmStatus; int damnStatus; String dataType; String sensorId;};
 
 const int ledGreenPin = 3;
 const int ledRedPin = 4;
@@ -18,6 +26,9 @@ const int authBtnPin = 5;
 
 const int utrEchoPin = 6;
 const int utrTriggerPin = 7;
+
+const int frtPin = 2;
+volatile int pulseCount; 
 
 const int motorPin = 8;
 
@@ -49,6 +60,11 @@ void loop() {
  //detect water level
  observeWaterLevel();
 
+ delay(2000);
+
+//detect flow rate
+ //observeWaterLeakage();
+
  delay(5000);
 
  //reset iterations
@@ -66,6 +82,7 @@ void initializeComponents() {
  initializeLcdDisplay();
  initializeSonar();
  initializeBuzzer();
+ //initializeFlowRateSensor();
 
 }
 
@@ -158,7 +175,7 @@ void observeWaterLevel() {
   lcdDisplay(total, 0);
 
   //send data to NodeMCU
-  assembleAndTransmitNodeMcu(total, -1);
+  assembleAndTransmitNodeMcu({total, false, -1, utrDataType, utrSensorId});
 
   //exceed critical water level
   if(total <= crticalWaterLevel) {
@@ -176,7 +193,7 @@ void observeWaterLevel() {
     Serial.println("Waiting for user permission to proceed!");
 
     //send data to NodeMCU
-    assembleAndTransmitNodeMcu(total, 0);
+    assembleAndTransmitNodeMcu({total, true, 0, utrDataType, utrSensorId});
 
     //waiting for the user input
     while(true) {
@@ -192,7 +209,7 @@ void observeWaterLevel() {
         triggerIndicators(0, HIGH);
 
         //send data to NodeMCU
-        assembleAndTransmitNodeMcu(total, 1);
+        assembleAndTransmitNodeMcu({total, true, 1, utrDataType, utrSensorId});
 
         break;
         
@@ -283,13 +300,25 @@ void triggerMotor(int rotationSpeed) {
 }
 
 //send data to NodeMCU
-void assembleAndTransmitNodeMcu(double data, int flag){
+void assembleAndTransmitNodeMcu(TransmissionData transmissionData){
 
   JsonObject requestBody = document.to<JsonObject>();
-  
-  requestBody["deviceId"] = deviceId;
-  requestBody["waterLevel"] = data;
-  requestBody["damnStatus"] = flag;
+
+  if(transmissionData.dataType == utrDataType) {
+
+    requestBody["dataType"] = transmissionData.dataType;
+    requestBody["sensorId"] = transmissionData.sensorId;
+    requestBody["waterLevel"] = transmissionData.sensorReading;
+    requestBody["alarmStatus"] = transmissionData.alarmStatus;
+    requestBody["damnStatus"] = transmissionData.damnStatus;
+  }
+  else {
+
+    requestBody["dataType"] = transmissionData.dataType;
+    requestBody["sensorId"] = transmissionData.sensorId;
+    requestBody["flowRate"] = transmissionData.sensorReading;
+    requestBody["alarmStatus"] = transmissionData.damnStatus;
+  }
 
   Serial.print("data to be transmitted to NodeMCU :: ");
   serializeJson(document, Serial);
@@ -299,7 +328,45 @@ void assembleAndTransmitNodeMcu(double data, int flag){
   
 }
 
+//initialize flow rate sensor
+void  initializeFlowRateSensor() {
+
+  Serial.println("Initializing FlowRate Sensor...");
+
+  pinMode(frtPin, INPUT_PULLUP); 
+  
+  attachInterrupt(digitalPinToInterrupt(frtPin), pulseCounter, RISING); 
+}
+
+
 //observe water leakage
 void observeWaterLeakage(){
+
+  Serial.println("Observing Flow Rate...");
+   
+  pulseCount = 0;
+
+  interrupts();
   
+  delay(1000);
+    
+  noInterrupts();
+
+  Serial.println("pulse count::::" + pulseCount);
+
+  //calculating water flow rate in ml per minute
+  double flowRate = (pulseCount * 2.22 * 60);
+
+  Serial.println("flow rate::::" + String(flowRate, 6));
+
+  /*if() {
+    
+  }*/
+  
+  //assembleAndTransmitNodeMcu({flowRate, false, -1, frtDataType, frtSensorId});
+
+}
+
+void pulseCounter() {
+    pulseCount++;
 }
