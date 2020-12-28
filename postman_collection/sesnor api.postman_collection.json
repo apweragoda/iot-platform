@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "50a6baa1-f4c0-4896-bf8b-2bd0825b9b40",
+		"name": "sesnor api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "liveness",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://******/check/liveness",
+					"protocol": "https",
+					"host": [
+						"******"
+					],
+					"path": [
+						"check",
+						"liveness"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "flow_rate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dataType\": \"flow_rate\",\n    \"sensorId\": \"SNSR_003\",\n    \"flowRate\": 90.66,\n    \"alarmStatus\": false\n}"
+				},
+				"url": {
+					"raw": "https://******/sensordata/flowRate",
+					"protocol": "https",
+					"host": [
+						"******"
+					],
+					"path": [
+						"sensordata",
+						"flowRate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "water_level",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"dataType\": \"water_level\",\n    \"sensorId\": \"SNSR_009\",\n    \"waterLevel\": 113.66,\n    \"alarmStatus\": false,\n    \"damnStatus\": -1\n}"
+				},
+				"url": {
+					"raw": "https://*******/sensordata/waterlevel",
+					"protocol": "https",
+					"host": [
+						"*******"
+					],
+					"path": [
+						"sensordata",
+						"waterlevel"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
