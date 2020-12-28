@@ -26,6 +26,8 @@ public class WaterLevelController {
 
         waterLevelService.persistWaterLevelSensorData(waterLevelRequest);
 
+        logger.info("completed invoking persistWaterLevel() POST endpoint...");
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

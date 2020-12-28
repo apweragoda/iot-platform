@@ -36,19 +36,32 @@ public class FlowRateService {
     @Transactional
     public void persistFlowRateSensorData(FlowRateRequest flowRateRequest) {
 
+        logger.info("invoking persistFlowRateSensorData(FlowRateRequest flowRateRequest)...");
+
         //get date time from server
         Map<String,String> dateTimeMap = dateTimeUtil.generateDateTimeString();
 
+        logger.debug("fetching sensor id::" + flowRateRequest.getSensorId());
+
         //fetch the relevant sensor from database
         Sensor sensor = sensorRepository.findById(flowRateRequest.getSensorId()).get();
+
+        logger.debug("completed fetching sensor::" + sensor.toString());
+        logger.debug("persisting FlowRate instance...");
 
         //prepare & persist FlowRate entity in database
         FlowRate flowRate = flowRateRepository.save(new FlowRate(flowRateRequest.getFlowRate(),
                 dateTimeMap.get(ApplicationConstants.UTIL_KEY_DATE), dateTimeMap.get(ApplicationConstants.UTIL_KEY_TIME),
                 sensor));
 
+        logger.debug("completed persisting FlowRate instance::" + flowRate.toString());
+        logger.debug("persisitng FlowRateAlarm instance...");
+
         //prepare & persist FlowRateAlarm entity in database
-        flowRateAlarmRepository.save(new FlowRateAlarm(flowRateRequest.getAlarmStatus(), flowRate));
+        FlowRateAlarm flowRateAlarm = flowRateAlarmRepository.save(new FlowRateAlarm(flowRateRequest.getAlarmStatus(), flowRate));
+
+        logger.debug("completed persisitng FlowRateAlarm instance::" + flowRateAlarm.toString());
+        logger.info("completed invoking persistFlowRateSensorData(FlowRateRequest flowRateRequest)...");
     }
 
 }

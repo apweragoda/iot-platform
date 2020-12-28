@@ -59,7 +59,6 @@ public class WaterLevelAlarm {
         return "WaterLevelAlarm{" +
                 "alarmId=" + alarmId +
                 ", alarmStatus=" + alarmStatus +
-                ", WaterLevel=" + waterLevel +
                 '}';
     }
 }

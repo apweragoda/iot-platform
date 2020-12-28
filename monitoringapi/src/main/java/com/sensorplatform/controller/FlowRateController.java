@@ -24,8 +24,13 @@ public class FlowRateController {
     @RequestMapping(path = "/flowRate", method = RequestMethod.POST)
     public ResponseEntity<HttpStatus> persistFlowRate(@RequestBody FlowRateRequest flowRateRequest) {
 
+        logger.info("invoking persistFlowRate() POST endpoint...");
+        logger.debug("received sensor data :: " + flowRateRequest.toString());
+
         flowRateService.persistFlowRateSensorData(flowRateRequest);
 
-        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
+        logger.info("completed invoking persistFlowRate() POST endpoint...");
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

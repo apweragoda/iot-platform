@@ -98,10 +98,8 @@ public class WaterLevel {
         return "WaterLevel{" +
                 "waterLevelId=" + waterLevelId +
                 ", waterLevel=" + waterLevel +
-                ", date=" + date +
-                ", time=" + time +
-                ", sensor=" + sensor +
-                ", waterLevelAlarm=" + waterLevelAlarm +
-                '}';
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                ", sensor=" + sensor.toString() + '}';
     }
 }

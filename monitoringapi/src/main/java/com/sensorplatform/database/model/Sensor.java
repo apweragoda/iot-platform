@@ -78,9 +78,7 @@ public class Sensor {
         return "Sensor{" +
                 "sensorId='" + sensorId + '\'' +
                 ", sensorType='" + sensorType + '\'' +
-                ", unit=" + unit +
-                ", flowRate=" + flowRate +
-                ", waterLevel=" + waterLevel +
+                ", unit=" + unit.toString() +
                 '}';
     }
 }

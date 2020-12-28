@@ -39,18 +39,33 @@ public class WaterLevelService {
     @Transactional
     public void persistWaterLevelSensorData(WaterLevelRequest waterLevelRequest) {
 
+        logger.info("invoking persistWaterLevelSensorData(WaterLevelRequest waterLevelRequest)...");
+        logger.debug("WaterLevelRequest:: " + waterLevelRequest.toString());
+
         //get date time from server
         Map<String,String> dateTimeMap = dateTimeUtil.generateDateTimeString();
 
+        logger.debug("fetching sensor for id::" + waterLevelRequest.getSensorId());
+
         //fetch the relevant sensor from database
         Sensor sensor = sensorRepository.findById(waterLevelRequest.getSensorId()).get();
+
+        logger.debug("completed fetching sensor::" + sensor.toString());
+        logger.debug("persisting WaterLevel instance...");
 
         //prepare & persist WaterLevel in database
         WaterLevel waterLevel = waterLevelRepository.save(new WaterLevel(waterLevelRequest.getWaterLevel(),
                 dateTimeMap.get(ApplicationConstants.UTIL_KEY_DATE), dateTimeMap.get(ApplicationConstants.UTIL_KEY_TIME),
                 sensor));
 
+        logger.debug("completed persisting WaterLevel instance::" + waterLevel.toString());
+        logger.debug("persisting WaterLevelAlarm instance...");
+
         //prepare & persist WaterLevelAlarm in database
-        waterLevelAlarmRepository.save(new WaterLevelAlarm(waterLevelRequest.getAlarmStatus(), waterLevel));
+        WaterLevelAlarm waterLevelAlarm = waterLevelAlarmRepository.save(
+                new WaterLevelAlarm(waterLevelRequest.getAlarmStatus(), waterLevel));
+
+        logger.debug("completed persisting WaterLevelAlarm instance::" + waterLevelAlarm.toString());
+        logger.info("completed invoking persistWaterLevelSensorData(WaterLevelRequest waterLevelRequest)...");
     }
 }

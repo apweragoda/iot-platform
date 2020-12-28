@@ -59,7 +59,6 @@ public class FlowRateAlarm {
         return "FlowRateAlarm{" +
                 "alarmId=" + alarmId +
                 ", alarmStatus=" + alarmStatus +
-                ", flowRate=" + flowRate +
                 '}';
     }
 }

@@ -100,8 +100,6 @@ public class FlowRate {
                 ", flowRate=" + flowRate +
                 ", date=" + date +
                 ", time=" + time +
-                ", sensor=" + sensor +
-                ", flowRateAlarm=" + flowRateAlarm +
-                '}';
+                ", sensor=" + sensor.toString() + '}';
     }
 }

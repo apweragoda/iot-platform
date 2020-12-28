@@ -73,9 +73,8 @@ public class Unit {
     public String toString() {
         return "Unit{" +
                 "deviceId=" + deviceId +
-                ", installationDate=" + installationDate +
-                ", location=" + location +
-                ", sensor=" + sensor +
+                ", installationDate='" + installationDate + '\'' +
+                ", location=" + location.toString() +
                 '}';
     }
 }

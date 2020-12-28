@@ -87,7 +87,6 @@ public class Location {
                 ", locationName='" + locationName + '\'' +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
-                ", unit=" + unit +
                 '}';
     }
 }
