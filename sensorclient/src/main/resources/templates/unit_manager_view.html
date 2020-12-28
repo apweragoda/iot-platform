@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<head>
+    <title>critical level</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+<div class="container-fluid">
+
+    <!--Navigation Bar-->
+    <div class="row">
+        <div class="col">
+            <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+                <a class="navbar-brand" href="#">
+                    <img th:src="@{/images/brang_logo.png}"
+                         width="60" height="60" class="d-inline-block align-top" alt="..brand logo..">
+                </a>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link active px-4" href="/home"> HOME <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link active px-4" href="/waterLevel"> WATER LEVEL </a>
+                        <a class="nav-item nav-link active px-4" href="/flowRate"> FLOW RATE </a>
+                        <a class="nav-item nav-link active px-4" href="/criticalLevel"> CRITICAL LEVEL </a>
+                        <a class="nav-item nav-link active px-4" href="/unit/getAll"> UNIT </a>
+                        <a class="nav-item nav-link active px-4" href="#"> SENSOR </a>
+                        <a class="nav-item nav-link active px-4" href="#"> LOCATION </a>
+                        <a class="nav-item nav-link active px-4" href="#"> USER </a>
+                        <a class="nav-item nav-link active px-4" href="#"> LOGOUT </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Search Bar for Unit-->
+    <div class="row pt-5">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-3"></div>
+        <div class="col-lg-3"></div>
+        <div class="col-lg-3">
+            <form class="form-inline" action="/unit/getByLocation" method="get">
+                <!--Select Menu-->
+                <div class="form-group mx-sm-3 mb-2">
+                    <select id="location" name="location" class="custom-select form-control">
+                        <option value="location_1">location 1</option>
+                        <option value="location_2">location 2</option>
+                        <option value="location_3">location 3</option>
+                    </select>
+                </div>
+                <!--Submit Button-->
+                <button type="submit" class="btn bg-info mb-2">search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Installed Units Table-->
+    <div class="row pt-5">
+        <div class="col-lg">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">DEVICE ID</th>
+                    <th scope="col">LONGITUDE</th>
+                    <th scope="col">LATITUDE</th>
+                    <th scope="col">LOCATION NAME</th>
+                    <th scope="col">SENSOR ID</th>
+                    <th scope="col">SENSOR TYPE</th>
+                    <th scope="col">INSTALLED DATE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="unitSensorModel: ${unitSensorModelWrapper}">
+                    <td th:text="${unitSensorModel.deviceId}" />
+                    <td th:text="${unitSensorModel.location.longitude}" />
+                    <td th:text="${unitSensorModel.location.latitude}" />
+                    <td th:text="${unitSensorModel.location.locationName}" />
+                    <td th:text="${unitSensorModel.sensor.sensorId}" />
+                    <td th:text="${unitSensorModel.sensor.sensorType}" />
+                    <td th:text="${unitSensorModel.installationDate}" />
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
